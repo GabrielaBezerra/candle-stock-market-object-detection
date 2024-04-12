@@ -1,5 +1,6 @@
 import cv2
 import screen
+from bot import Bot
 from ultralyticsplus import YOLO, render_result
 
 # load model
@@ -12,16 +13,20 @@ model.overrides["iou"] = 0.45  # NMS IoU threshold
 model.overrides["agnostic_nms"] = False  # NMS class-agnostic
 model.overrides["max_det"] = 1000  # maximum number of detections per image
 
+bot = Bot()
+
 # Loop through the video frames
 while True:
-    # Read a frame from the video
-    frame = screen.capture()
+    print(bot.driver.get_window_rect())
 
-    # Run YOLOv8 inference on the frame
-    results = model(frame)
+    # # Read a frame from the video
+    # frame = screen.capture()
 
-    # Visualize the results on the frame
-    screen.show(results[0].plot())
+    # # Run YOLOv8 inference on the frame
+    # results = model(frame)
 
-    if cv2.waitKey(25) & 0xFF == ord("q"):
-        cv2.destroyAllWindows()
+    # # Visualize the results on the frame
+    # screen.show(results[0].plot())
+
+    # if cv2.waitKey(25) & 0xFF == ord("q"):
+    #     cv2.destroyAllWindows()
