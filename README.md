@@ -4,8 +4,6 @@ Modelo: YOLO [foduucom/stockmarket-pattern-detection-yolov8](https://huggingface
 
 Construído para a disciplina de Processamento Digital de Imagens do Mestrado em Engenharia de Telecomunicações - IFCE
 
----
-
 > Autores: Paulo Bernardo, Gabriela Bezerra
 
 
