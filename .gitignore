@@ -135,8 +135,5 @@ cython_debug/
 # Ignore all .DS_Store files
 **/.DS_Store
 
-# Ignore all .vscode files
-**/.vscode
-
 # Ignore all hugging faces files
 *.pt
