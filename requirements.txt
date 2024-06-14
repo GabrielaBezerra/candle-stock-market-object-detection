@@ -2,4 +2,4 @@ opencv-python
 numpy
 pillow
 ultralyticsplus
-selenium
+iqoptionapi @ git+https://github.com/iqoptionapi/iqoptionapi.git

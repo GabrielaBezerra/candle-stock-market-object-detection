@@ -25,7 +25,10 @@ class Bot:
 
     # TODO: Implement the buy and sell methods
     def buy(self):
-        self.driver.find_element(By.CLASS_NAME, "")
+        # Store iframe web element
+        iframe = self.driver.find_element(By.CSS_SELECTOR, "#modal > iframe")
+        # switch to selected iframe
+        self.driver.switch_to.frame(iframe)
         pass
 
     def sell(self):

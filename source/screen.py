@@ -34,4 +34,5 @@ def show(annotated_frame):
 
     image = cv2.resize(cv2.cvtColor(screen_grab, cv2.COLOR_RGB2BGRA), (900, 1080))
     # image = cv2.resize(cv2.cvtColor(screen_grab, cv2.COLOR_RGB2BGRA), (1920, 1080))
+
     cv2.imshow("YOLO Reference", image)
