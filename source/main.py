@@ -69,8 +69,6 @@ while True:
 
     # For each box in the filtered boxes
     for box in boxes_sorted_by_confidence:
-        current_date = iq.iq.get_server_timestamp()
-
         x_center = box.xywh[0, 0].item()
         width = box.xywh[0, 2].item()
 
@@ -79,21 +77,21 @@ while True:
             last_box_cls = box.cls
             last_x_right = x_right
 
-        # check if current_date is after 5 minutes of the last trade
-        if current_date - last_trade_date > (60 * 1 + random.randint(-10, 10)):
-            last_trade_date = current_date
+    current_date = iq.iq.get_server_timestamp()
 
-            if last_box_cls in [1, 2]:
-                iq.sell("EURUSD-OTC", last_box_cls)
-            elif last_box_cls in [0, 5]:
-                iq.buy("EURUSD-OTC", last_box_cls)
-            else:
-                print(f"unclear ${last_box_cls}")
-
-            count += 1
+    # check if current_date is after 5 minutes of the last trade
+    if current_date - last_trade_date > (60 * 1 + random.randint(-10, 10)) and last_box_cls:
+        last_trade_date = current_date
+        if last_box_cls in [1, 2]:
+            iq.sell("EURUSD-OTC", last_box_cls)
+        elif last_box_cls in [0, 5]:
+            iq.buy("EURUSD-OTC", last_box_cls)
         else:
-            break
-            # print("You can't try to trade right now. Wait 5 minutes.")
+            print(f"unclear ${last_box_cls}")
+        count += 1
+    else:
+        pass
+        # print("You can't try to trade right now. Wait 5 minutes.")
 
     if cv2.waitKey(25) & 0xFF == ord("q"):
         cv2.destroyAllWindows()
