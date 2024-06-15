@@ -80,7 +80,7 @@ while True:
             last_x_right = x_right
 
         # check if current_date is after 5 minutes of the last trade
-        if current_date - last_trade_date > (60 * 1 + random.randint(-10, 10)) and last_x_right > 400:
+        if current_date - last_trade_date > (60 * 1 + random.randint(-10, 10)):
             last_trade_date = current_date
 
             if last_box_cls in [1, 2]:
