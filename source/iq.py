@@ -7,7 +7,7 @@ from iqoptionapi.stable_api import IQ_Option
 
 def atualizar_csv(file, dados):
     with open(file, mode='a', newline='') as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, delimiter=';')
         writer.writerow(dados)
 
 
@@ -78,7 +78,7 @@ class IQ:
             print("!buy!", id) if ACTION == "call" else print("!sell!", id)
 
             horario = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-            dados_negociacao = [id, ACTIVES, Money, expirations_mode, ACTION, self.iq.get_balance(), horario]
+            dados_negociacao = [id, ACTIVES, Money, expirations_mode, ACTION, str(self.iq.get_balance()).replace(".", ","), horario]
             atualizar_csv(self.csv_file, dados_negociacao)
         else:
             print("buy fail:", id) if ACTION == "call" else print("sell fail:", id)

@@ -20,7 +20,7 @@ model.overrides["max_det"] = 1000  # maximum number of detections per image
 csv_file = 'negociacoes-' + str(time.strftime("%Y-%m-%d-%H-%M-%S", time.gmtime())) + '.csv'
 
 with open(csv_file, mode='w', newline='') as f:
-    writer = csv.writer(f)
+    writer = csv.writer(f, delimiter=';')
     writer.writerow(["ID", "Ativo", "Valor Investido", "Tempo de Expiração", "Direção", "Balanco", "Horário"])
 
 bot = Bot()
@@ -30,6 +30,10 @@ iq.login()
 last_trade_date = iq.iq.get_server_timestamp() - 60 * 1
 detected_patterns = []
 
+last_box_cls = ''
+last_x_right = 0
+
+count = 0
 
 # Loop through the video frames
 while True:
@@ -61,22 +65,39 @@ while True:
         filtered_boxes, key=lambda box: box.conf, reverse=True
     )
 
+    last_x_right -= 20
+
     # For each box in the filtered boxes
     for box in boxes_sorted_by_confidence:
         current_date = iq.iq.get_server_timestamp()
+
+        x_center = box.xywh[0, 0].item()
+        width = box.xywh[0, 2].item()
+
+        x_right = x_center + (width / 2)
+        if last_x_right < x_right:
+            last_box_cls = box.cls
+            last_x_right = x_right
+
         # check if current_date is after 5 minutes of the last trade
-        if current_date - last_trade_date > (60 * 1 + random.randint(-10, 10)):
+        if current_date - last_trade_date > (60 * 1 + random.randint(-10, 10)) and last_x_right > 400:
             last_trade_date = current_date
-            print(box)
-            if box.cls in [1, 2]:
-                iq.sell("EURUSD-OTC", box.cls)
-            elif box.cls in [0, 5]:
-                iq.buy("EURUSD-OTC", box.cls)
+
+            if last_box_cls in [1, 2]:
+                iq.sell("EURUSD-OTC", last_box_cls)
+            elif last_box_cls in [0, 5]:
+                iq.buy("EURUSD-OTC", last_box_cls)
             else:
-                print(f"unclear ${box.cls}")
+                print(f"unclear ${last_box_cls}")
+
+            count += 1
         else:
-            pass
+            break
             # print("You can't try to trade right now. Wait 5 minutes.")
 
     if cv2.waitKey(25) & 0xFF == ord("q"):
         cv2.destroyAllWindows()
+
+    if count == 50:
+        cv2.destroyAllWindows()
+        break
