@@ -1,11 +1,11 @@
+import time
 import random
 import cv2
-from matplotlib.pyplot import annotate
-from sympy import plot
 import screen
 from bot import Bot
 from iq import IQ
 from ultralyticsplus import YOLO
+import csv
 
 # load model
 # https://huggingface.co/foduucom/stockmarket-pattern-detection-yolov8
@@ -17,18 +17,28 @@ model.overrides["iou"] = 0.5  # NMS IoU threshold
 model.overrides["agnostic_nms"] = False  # NMS class-agnostic
 model.overrides["max_det"] = 1000  # maximum number of detections per image
 
+csv_file = 'negociacoes-' + str(time.strftime("%Y-%m-%d-%H-%M-%S", time.gmtime())) + '.csv'
+
+with open(csv_file, mode='w', newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(["ID", "Ativo", "Valor Investido", "Tempo de Expiração", "Direção", "Balanco", "Horário"])
+
 bot = Bot()
-iq = IQ()
+iq = IQ(csv_file)
 iq.login()
 
-last_trade_date = iq.iq.get_server_timestamp() - 60 * 5
+last_trade_date = iq.iq.get_server_timestamp() - 60 * 1
 detected_patterns = []
 
 
 # Loop through the video frames
 while True:
-    if not iq.iq.connect():
-        id.login()
+    try:
+        if not iq.iq.connect():
+            iq.login()
+    except:
+        iq = IQ(csv_file)
+        iq.login()
 
     # print(bot.driver.get_window_rect())
 
@@ -55,16 +65,18 @@ while True:
     for box in boxes_sorted_by_confidence:
         current_date = iq.iq.get_server_timestamp()
         # check if current_date is after 5 minutes of the last trade
-        if current_date - last_trade_date > (60 * 5 + random.randint(-10, 10)):
+        if current_date - last_trade_date > (60 * 1 + random.randint(-10, 10)):
             last_trade_date = current_date
+            print(box)
             if box.cls in [1, 2]:
-                iq.sell("USDBRL", box.cls)
+                iq.sell("EURUSD-OTC", box.cls)
             elif box.cls in [0, 5]:
-                iq.buy("USDBRL", box.cls)
+                iq.buy("EURUSD-OTC", box.cls)
             else:
                 print(f"unclear ${box.cls}")
         else:
-            print("You can't try to trade right now. Wait 5 minutes.")
+            pass
+            # print("You can't try to trade right now. Wait 5 minutes.")
 
     if cv2.waitKey(25) & 0xFF == ord("q"):
         cv2.destroyAllWindows()

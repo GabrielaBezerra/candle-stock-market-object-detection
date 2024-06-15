@@ -1,20 +1,28 @@
 import logging
-from math import e
+import csv
+
 import time
 from iqoptionapi.stable_api import IQ_Option
-from matplotlib.pylab import f
+
+
+def atualizar_csv(file, dados):
+    with open(file, mode='a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(dados)
 
 
 class IQ:
     iq: IQ_Option
+    csv_file: str
 
-    def __init__(self):
+    def __init__(self, csv_file):
         self.buy_dict = {}
         self.sell_dict = {}
+        self.csv_file = csv_file
 
     def login(self, verbose=True, iq=None, checkConnection=False):
         error_password = """{"code":"invalid_credentials","message":"You entered the wrong credentials. Please check that the login/password is correct."}"""
-        iqoption = IQ_Option("gabriela.hotdog@hotmail.com", "pdi123")
+        iqoption = IQ_Option("paulobernardo262@yahoo.com", "pauloceara")
         check, reason = iqoption.connect()
         iqoption.change_balance("PRACTICE")
         if check:
@@ -38,6 +46,16 @@ class IQ:
             elif reason == error_password:
                 print("Error Password")
 
+        is_asset_open = iqoption.get_all_open_time()
+        asset = 'EURUSD-OTC'
+
+        # Verificar se o ativo está disponível
+        if is_asset_open["binary"][asset]["open"]:
+            print(f"O ativo {asset} está disponível para negociação.")
+        else:
+            print(f"O ativo {asset} não está disponível para negociação no momento.")
+            print(is_asset_open["binary"])
+
     def buy(self, ACTIVES, cls):
         self.buy_dict[cls] = self.buy_dict.get(cls, 0) + 1
         self._operate("call", ACTIVES)
@@ -58,5 +76,10 @@ class IQ:
         check, id = self.iq.buy(Money, ACTIVES, ACTION, expirations_mode)
         if check:
             print("!buy!", id) if ACTION == "call" else print("!sell!", id)
+
+            horario = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+            dados_negociacao = [id, ACTIVES, Money, expirations_mode, ACTION, self.iq.get_balance(), horario]
+            atualizar_csv(self.csv_file, dados_negociacao)
         else:
             print("buy fail:", id) if ACTION == "call" else print("sell fail:", id)
+
