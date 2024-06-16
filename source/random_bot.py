@@ -7,7 +7,7 @@ csv_file = 'random-negociacoes-' + str(time.strftime("%Y-%m-%d-%H-%M-%S", time.g
 
 with open(csv_file, mode='w', newline='') as f:
     writer = csv.writer(f, delimiter=';')
-    writer.writerow(["ID", "Ativo", "Valor Investido", "Tempo de Expiração", "Direção", "Balanco", "Horário"])
+    writer.writerow(["ID", "Ativo", "Valor Investido", "Tempo de Expiração", "Direção", "Balanco", "Horário", "Classe"])
 
 
 iq = IQ(csv_file)

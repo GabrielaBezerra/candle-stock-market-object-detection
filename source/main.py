@@ -21,7 +21,7 @@ csv_file = 'negociacoes-' + str(time.strftime("%Y-%m-%d-%H-%M-%S", time.gmtime()
 
 with open(csv_file, mode='w', newline='') as f:
     writer = csv.writer(f, delimiter=';')
-    writer.writerow(["ID", "Ativo", "Valor Investido", "Tempo de Expiração", "Direção", "Balanco", "Horário"])
+    writer.writerow(["ID", "Ativo", "Valor Investido", "Tempo de Expiração", "Direção", "Balanco", "Horário", "Classe"])
 
 bot = Bot()
 iq = IQ(csv_file)
@@ -96,6 +96,8 @@ while True:
     if cv2.waitKey(25) & 0xFF == ord("q"):
         cv2.destroyAllWindows()
 
-    if count == 50:
+    if count == 60:
         cv2.destroyAllWindows()
         break
+
+    time.sleep(5)

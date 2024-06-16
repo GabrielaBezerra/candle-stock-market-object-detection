@@ -58,13 +58,13 @@ class IQ:
 
     def buy(self, ACTIVES, cls):
         self.buy_dict[cls] = self.buy_dict.get(cls, 0) + 1
-        self._operate("call", ACTIVES)
+        self._operate("call", ACTIVES, cls)
 
     def sell(self, ACTIVES, cls):
         self.sell_dict[cls] = self.sell_dict.get(cls, 0) + 1
-        self._operate("put", ACTIVES)
+        self._operate("put", ACTIVES, cls)
 
-    def _operate(self, ACTION, ACTIVES):
+    def _operate(self, ACTION, ACTIVES, cls):
         print(f"Amount of sell {self.sell_dict}")
         print(f"Amount of buy {self.buy_dict}")
         print(f"Current balance ${self.iq.get_balance()}")
@@ -78,7 +78,7 @@ class IQ:
             print("!buy!", id) if ACTION == "call" else print("!sell!", id)
 
             horario = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-            dados_negociacao = [id, ACTIVES, Money, expirations_mode, ACTION, str(self.iq.get_balance()).replace(".", ","), horario]
+            dados_negociacao = [id, ACTIVES, Money, expirations_mode, ACTION, str(self.iq.get_balance()).replace(".", ","), horario, cls.item()]
             atualizar_csv(self.csv_file, dados_negociacao)
         else:
             print("buy fail:", id) if ACTION == "call" else print("sell fail:", id)
