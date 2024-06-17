@@ -31,11 +31,11 @@ class Bot:
         time.sleep(2)
         conatainer_email_element = self.driver.find_element(By.XPATH, '//div[@data-test-id="login-email-input"]')
         input_email_element = conatainer_email_element.find_element(By.TAG_NAME, 'input')
-        input_email_element.send_keys("paulobernardo262@yahoo.com")
+        input_email_element.send_keys("seu_email_aqui")
 
         conatainer_password_element = self.driver.find_element(By.XPATH, '//div[@data-test-id="login-password-input"]')
         input_password_element = conatainer_password_element.find_element(By.TAG_NAME, 'input')
-        input_password_element.send_keys("pauloceara")
+        input_password_element.send_keys("sua_senha_aqui")
 
         self.driver.find_element(By.XPATH, '//button[@data-test-id="login-submit-button"]').click()
 
