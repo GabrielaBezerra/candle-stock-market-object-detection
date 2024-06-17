@@ -21,7 +21,7 @@ class IQ:
 
     def login(self, verbose=True, iq=None, checkConnection=False):
         error_password = """{"code":"invalid_credentials","message":"You entered the wrong credentials. Please check that the login/password is correct."}"""
-        iqoption = IQ_Option("gabriela.hotdog@hotmail.com", "pdi123")
+        iqoption = IQ_Option("seu_email_aqui", "sua_senha_aqui")
         check, reason = iqoption.connect()
         iqoption.change_balance("PRACTICE")
         if check:
