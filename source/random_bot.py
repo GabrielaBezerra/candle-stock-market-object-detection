@@ -3,11 +3,26 @@ import random
 from iq import IQ
 import csv
 
-csv_file = 'random-negociacoes-' + str(time.strftime("%Y-%m-%d-%H-%M-%S", time.gmtime())) + '.csv'
+csv_file = (
+    "random-negociacoes-"
+    + str(time.strftime("%Y-%m-%d-%H-%M-%S", time.gmtime()))
+    + ".csv"
+)
 
-with open(csv_file, mode='w', newline='') as f:
-    writer = csv.writer(f, delimiter=';')
-    writer.writerow(["ID", "Ativo", "Valor Investido", "Tempo de Expiração", "Direção", "Balanco", "Horário", "Classe"])
+with open(csv_file, mode="w", newline="") as f:
+    writer = csv.writer(f, delimiter=";")
+    writer.writerow(
+        [
+            "ID",
+            "Ativo",
+            "Valor Investido",
+            "Tempo de Expiração",
+            "Direção",
+            "Balanco",
+            "Horário",
+            "Classe",
+        ]
+    )
 
 
 iq = IQ(csv_file)
@@ -23,9 +38,9 @@ for _ in range(52):
         iq = IQ(csv_file)
         iq.login()
 
-    random_sell_or_buy = random.choice(['buy', 'sell'])
+    random_sell_or_buy = random.choice(["buy", "sell"])
 
-    if random_sell_or_buy == 'sell':
+    if random_sell_or_buy == "sell":
         iq.sell("EURUSD-OTC", random_sell_or_buy)
     else:
         iq.buy("EURUSD-OTC", random_sell_or_buy)
